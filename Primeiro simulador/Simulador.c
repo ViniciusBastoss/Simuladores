@@ -80,7 +80,7 @@ int main(){
         tempo_decorrido = !fila ? chegada : minimo(chegada, servico);
 
         if(tempo_decorrido == chegada){
-            printf("Chegada em %lF.\n", tempo_decorrido);
+            //printf("Chegada em %lF.\n", tempo_decorrido);
             if(!fila){
                 servico = tempo_decorrido + (-1.0 / (1.0/tempo_medio_servico)) * log(aleatorio());
                 soma_tempo_servico += servico - tempo_decorrido;
@@ -101,7 +101,7 @@ int main(){
 
 
         }else{
-            printf("Saida  em %lF.\n", tempo_decorrido);
+            //printf("Saida  em %lF.\n", tempo_decorrido);
             fila--;
 
             if(fila){
@@ -130,8 +130,14 @@ int main(){
 
     double e_n_final = e_n.soma_areas / tempo_decorrido;
     double e_w_final = (e_w_chegada.soma_areas - e_w_saida.soma_areas)/e_w_chegada.no_eventos;
-    double lambda = 
-    printf("lambda: %F\n\n", lambda);
+    double lambda = e_w_chegada.no_eventos / tempo_decorrido;
+
+    printf("\nEvetos-N:%ld",e_w_chegada.no_eventos);
+    printf("\nEvetos-N:%ld",e_w_saida.no_eventos);
+
+    printf("E[N]: %lF\n", e_n_final);
+    printf("E[W]: %lF\n", e_w_final);
+    printf("lambda: %lF\n\n", lambda);
     
     printf("Erro de Little: %.20lF\n\n", e_n_final - lambda * e_w_final);
 
