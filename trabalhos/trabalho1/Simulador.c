@@ -8,7 +8,8 @@ typedef struct little_{
     double tempo_anterior;
     double soma_areas;
 }little;
-
+int aux = 0,aux2 = 0;
+double vetcheg[8], vetsaid[8];
 double aleatorio(){
     double u = rand() / ((double) RAND_MAX + 1);
     //limitando entre (0,1]
@@ -38,10 +39,10 @@ void inicia_little(little *l){
 
 int acada100 = 100;
 void coletaDados(little e_n,little e_w_chegada,little e_w_saida,int a){
-    double aux,complementoEn, complementoEw_saida = 0,complementoEw_entrada;
-    complementoEw_entrada = (acada100 - e_w_chegada.tempo_anterior)*(e_w_chegada.no_eventos - 1);
-    if(a == 0){
-        complementoEw_saida = (acada100 - e_w_saida.tempo_anterior)*(e_w_saida.no_eventos - 1);
+    double aux,complementoEn, complementoEw_saida = 0,complementoEw_entrada = 0;
+    if(a == 1){
+        complementoEw_saida = (acada100 - e_w_saida.tempo_anterior)*(e_w_saida.no_eventos);
+        complementoEw_entrada = (acada100 - e_w_chegada.tempo_anterior)*(e_w_chegada.no_eventos);
     }
 
     printf("\nTempo Atual: %d(s)",acada100);
@@ -51,12 +52,31 @@ void coletaDados(little e_n,little e_w_chegada,little e_w_saida,int a){
    // aux = (e_w_chegada.tempo_anterior > acada100)? acada100 : e_w_chegada.tempo_anterior;
 
     double e_w_final = ((e_w_chegada.soma_areas + (complementoEw_entrada) -
-    (e_w_saida.soma_areas + complementoEw_saida))/(e_w_chegada.no_eventos - 1));
+    (e_w_saida.soma_areas + complementoEw_saida))/(e_w_chegada.no_eventos));
+
+    if(acada100 == 100){
+        printf("e_w_chegada.soma_areas:%lf,complementoEw_entrada:%lf,e_w_saida.soma_areas:%lf,complementoEw_saida:%lf,e_w_chegada.no_eventos:%d", 
+        e_w_chegada.soma_areas,complementoEw_entrada,e_w_saida.soma_areas,
+        complementoEw_saida,e_w_chegada.no_eventos);
+    }
     printf("\nE[W]: %lf\n", e_w_final);//lF
     /*printf("Erro de Little: %.20lf\n\n", e_n_final - lambda * e_w_final);//lF
     printf("Ocupacao: %lf\n", soma_tempo_servico/maximo(tempo_decorrido, servico));//lF
     */
+   double cont = 0;
+   if(acada100 == 100){
+    aux = 0;
+    vetsaid[7] = 100;
+    for(int i = 0; i < 8 ;i++){
+        cont += vetsaid[i] - vetcheg[i] ;
+        printf("\nChegada:%lf,  Saida:%lf\n",vetcheg[i],vetsaid[i]);
+    }
+    printf("\nCalculo com vetores E[W] = %lf = %lf\n",cont,cont/8);
+
+
+   }
    acada100 += 100;
+
 }
 
 int main(){
@@ -73,8 +93,6 @@ int main(){
 
     unsigned long int fila = 0;
     unsigned long int maxFila = 0;
-
-    int aux = 0;
 
     /**
      Little
@@ -132,7 +150,11 @@ int main(){
 */
         if(tempo_decorrido == chegada){
             printf("Chegada em %lf.\n", tempo_decorrido);
-            //aux += tempo_decorrido;
+            if(tempo_decorrido <= 100){
+                vetcheg[aux] = tempo_decorrido;
+                aux++;
+            }
+            //aux += tempo_decorrido;{}
             if(!fila){
                 servico = tempo_decorrido + (-1.0 / (1.0/tempo_medio_servico)) * log(aleatorio());
                 soma_tempo_servico += servico - tempo_decorrido;
@@ -153,7 +175,11 @@ int main(){
 
 
         }else{
-            //printf("Saida  em %lF.\n", tempo_decorrido);
+            printf("Saida  em %lf.\n", tempo_decorrido);
+                 if(tempo_decorrido <= 100){
+                vetsaid[aux2] = tempo_decorrido;    
+                aux2++;
+            }
             fila--;
 
             if(fila){
