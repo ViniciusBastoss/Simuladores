@@ -68,17 +68,18 @@ int main(){
 
     //srand(time(NULL));
     srand(10000);
-
     printf("Tempo de simulacao: 36.000 (segundos).\n");
     //scanf("%lF",&tempo_simulacao);
-    tempo_simulacao = 36000;
+    tempo_simulacao = 400;
 
     printf("Intervalo medio entre chegadas: 0.2 (segundos).\n");
     //scanf("%lF",&intervalo_medio_chegada);
-    intervalo_medio_chegada = 0.2;
+    intervalo_medio_chegada = 40;
 
     printf("Informe o tempo medio de serviço (segundos):");
-    scanf("%lF",&tempo_medio_servico);
+    //scanf("%lF",&tempo_medio_servico);
+    tempo_medio_servico = 5;
+
     //gerando o tempo de chegada da primeira requisicao.
     chegada = (-1.0 / (1.0/intervalo_medio_chegada)) * log(aleatorio());
 
@@ -87,7 +88,7 @@ int main(){
 
         //chegada
         if(tempo_decorrido == chegada){
-            //printf("Chegada em %lF.\n", tempo_decorrido);
+            printf("Chegada em %lf.\n", tempo_decorrido);
             if(!fila){
                 servico = tempo_decorrido + (-1.0 / (1.0/tempo_medio_servico)) * log(aleatorio());
                 soma_tempo_servico += servico - tempo_decorrido;
@@ -140,14 +141,14 @@ int main(){
     (e_w_chegada.soma_areas - e_w_saida.soma_areas)/e_w_chegada.no_eventos;
     double lambda = e_w_chegada.no_eventos / tempo_decorrido;
 
-    printf("E[N]: %lF\n", e_n_final);
-    printf("E[W]: %lF\n", e_w_final);
-    printf("lambda: %lF\n\n", lambda);
+    printf("E[N]: %lf\n", e_n_final);
+    printf("E[W]: %lf\n", e_w_final);
+    printf("lambda: %lf\n\n", lambda);
 
-    printf("Erro de Little: %.20lF\n\n", e_n_final - lambda * e_w_final);
+    printf("Erro de Little: %.20lf\n\n", e_n_final - lambda * e_w_final);
 
-    printf("Ocupacao: %lF.\n", soma_tempo_servico/maximo(tempo_decorrido, servico));
-    printf("Max fila: %ld.\n", max_fila);
+    printf("Ocupacao: %lf.\n", soma_tempo_servico/maximo(tempo_decorrido, servico));
+    printf("Max fila: %d.\n", max_fila);
 
     return 0;
 }
