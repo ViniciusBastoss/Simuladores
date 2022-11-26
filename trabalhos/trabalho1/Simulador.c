@@ -46,7 +46,7 @@ void coletaDados(little e_n,little e_w_chegada,little e_w_saida,int a){
     }
 
     printf("\nTempo Atual: %d(s)",acada100);
-    double e_n_final = (e_n.soma_areas + (acada100 - e_n.tempo_anterior)*(e_n.no_eventos - 1)) / acada100;
+    double e_n_final = (e_n.soma_areas + (acada100 - e_n.tempo_anterior)*(e_n.no_eventos)) / acada100;
     printf("\nE[N]: %lf\n", e_n_final);//lF
     
    // aux = (e_w_chegada.tempo_anterior > acada100)? acada100 : e_w_chegada.tempo_anterior;
@@ -71,7 +71,14 @@ void coletaDados(little e_n,little e_w_chegada,little e_w_saida,int a){
         cont += vetsaid[i] - vetcheg[i] ;
         printf("\nChegada:%lf,  Saida:%lf\n",vetcheg[i],vetsaid[i]);
     }
-    printf("\nCalculo com vetores E[W] = %lf = %lf\n",cont,cont/8);
+    printf("\nCalculo com vetores E[W] = %lf = %lf\n",cont,cont/100);
+    cont = 0;
+
+    for(int i = 0; i < 8; i++){
+        cont +=  vetsaid[7-i] - vetcheg[i];
+        printf("\nChegada:%lf,  Saida:%lf\n",vetcheg[i],vetsaid[7 - i]);
+    }
+    printf("\nCalculo com vetores E[N] = %lf = %lf\n",cont,cont/8);
 
 
    }
