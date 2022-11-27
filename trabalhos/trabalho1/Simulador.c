@@ -117,7 +117,7 @@ int main()
 
     printf("Informe o tempo medio de serviço (segundos):\n");
     // scanf("%lF",&tempo_medio_servico);
-    tempo_medio_servico = 0.1;
+    tempo_medio_servico = 0.19;
 
     // gerando o tempo de chegada da primeira requisicao
     chegada = (-1.0 / (1.0 / intervalo_medio_chegada)) * log(aleatorio());
@@ -149,7 +149,8 @@ int main()
         {
             if (GuardSaida >= acadaT)
             {
-                coletaDados(e_n_aux, e_w_chegada_aux, e_w_saida_aux,soma_tempo_servico, 1);
+
+                coletaDados(e_n_aux, e_w_chegada_aux, e_w_saida_aux,(soma_tempo_servico - (GuardSaida - acadaT)), 1);
             }
             else
             {
@@ -215,6 +216,7 @@ int main()
             // printf("\n\nElse:Ultima chegada:%f\n\n",chegada);
         }
     }
+    printf("\nConte:%d\n",contE);
 
     e_w_chegada.soma_areas +=
         (tempo_decorrido - e_w_chegada.tempo_anterior) * e_w_chegada.no_eventos;
