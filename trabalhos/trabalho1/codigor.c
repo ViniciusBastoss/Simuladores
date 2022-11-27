@@ -37,16 +37,16 @@ void inicia_little(little *l){
     l->soma_areas = 0.0;
 }
 
-int acada100 = 100;
+int acadaT = 100;
 void coletaDados(little e_n,little e_w_chegada,little e_w_saida,int a){
     double aux,complementoEn, complementoEw_saida = 0,complementoEw_entrada = 0;
     if(a == 1){
-        complementoEw_saida = (acada100 - e_w_saida.tempo_anterior)*(e_w_saida.no_eventos);
-        complementoEw_entrada = (acada100 - e_w_chegada.tempo_anterior)*(e_w_chegada.no_eventos);
+        complementoEw_saida = (acadaT - e_w_saida.tempo_anterior)*(e_w_saida.no_eventos);
+        complementoEw_entrada = (acadaT - e_w_chegada.tempo_anterior)*(e_w_chegada.no_eventos);
     }
 
-    printf("\nTempo Atual: %d(s)",acada100);
-    double e_n_final = (e_n.soma_areas + (acada100 - e_n.tempo_anterior)*(e_n.no_eventos)) / acada100;
+    printf("\nTempo Atual: %d(s)",acadaT);
+    double e_n_final = (e_n.soma_areas + (acadaT - e_n.tempo_anterior)*(e_n.no_eventos)) / acadaT;
     printf("\nE[N]: %lf\n", e_n_final);//lF
     
    // aux = (e_w_chegada.tempo_anterior > acada100)? acada100 : e_w_chegada.tempo_anterior;
@@ -54,7 +54,7 @@ void coletaDados(little e_n,little e_w_chegada,little e_w_saida,int a){
     double e_w_final = ((e_w_chegada.soma_areas + (complementoEw_entrada) -
     (e_w_saida.soma_areas + complementoEw_saida))/(e_w_chegada.no_eventos));
 
-    if(acada100 == 200){
+    if(acadaT == 200){
         printf("e_w_chegada.soma_areas:%lf,complementoEw_entrada:%lf,e_w_saida.soma_areas:%lf,complementoEw_saida:%lf,e_w_chegada.no_eventos:%d", 
         e_w_chegada.soma_areas,complementoEw_entrada,e_w_saida.soma_areas,
         complementoEw_saida,e_w_chegada.no_eventos);
@@ -65,7 +65,7 @@ void coletaDados(little e_n,little e_w_chegada,little e_w_saida,int a){
     */
 
  
-   acada100 += 100;
+   acadaT += 100;
    aux = 1;
 
 }
@@ -121,15 +121,15 @@ int main(){
 
         tempo_decorrido = !fila ? chegada : minimo(chegada, servico);
 
-        if(chegada >= acada100 && aux){
+        if(chegada >= acadaT && aux){
             contE2 = contE;
             e_w_chegada_aux = e_w_chegada;
             e_n_aux = e_n;
             aux = 0;
         }
 
-        if(contE2 == contS && chegada >= acada100){
-            if(GuardSaida >= acada100){
+        if(contE2 == contS && chegada >= acadaT){
+            if(GuardSaida >= acadaT){
                 coletaDados(e_n_aux,e_w_chegada_aux,e_w_saida_aux,1);
             }
             else{
