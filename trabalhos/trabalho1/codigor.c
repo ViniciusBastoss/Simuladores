@@ -8,7 +8,7 @@ typedef struct little_{
     double tempo_anterior;
     double soma_areas;
 }little;
-int aux = 0,aux2 = 0;
+int aux = 1,aux2 = 0;
 double vetcheg[15], vetsaid[15];
 double aleatorio(){
     double u = rand() / ((double) RAND_MAX + 1);
@@ -54,7 +54,7 @@ void coletaDados(little e_n,little e_w_chegada,little e_w_saida,int a){
     double e_w_final = ((e_w_chegada.soma_areas + (complementoEw_entrada) -
     (e_w_saida.soma_areas + complementoEw_saida))/(e_w_chegada.no_eventos));
 
-    if(acada100 == 100){
+    if(acada100 == 200){
         printf("e_w_chegada.soma_areas:%lf,complementoEw_entrada:%lf,e_w_saida.soma_areas:%lf,complementoEw_saida:%lf,e_w_chegada.no_eventos:%d", 
         e_w_chegada.soma_areas,complementoEw_entrada,e_w_saida.soma_areas,
         complementoEw_saida,e_w_chegada.no_eventos);
@@ -63,25 +63,10 @@ void coletaDados(little e_n,little e_w_chegada,little e_w_saida,int a){
     /*printf("Erro de Little: %.20lf\n\n", e_n_final - lambda * e_w_final);//lF
     printf("Ocupacao: %lf\n", soma_tempo_servico/maximo(tempo_decorrido, servico));//lF
     */
-   double cont = 0;
-   if(acada100 == 200){
-    aux = 0;
-    for(int i = 0; i < 15 ;i++){
-        cont += vetsaid[i] - vetcheg[i] ;
-        printf("\nChegada:%lf,  Saida:%lf\n",vetcheg[i],vetsaid[i]);
-    }
-    printf("\nCalculo com vetores E[W] = %lf = %lf\n",cont,cont/200);
-    cont = 0;
 
-    for(int i = 0; i < 15; i++){
-        cont +=  vetsaid[14-i] - vetcheg[i];
-        printf("\nChegada:%lf,  Saida:%lf\n",vetcheg[i],vetsaid[14 - i]);
-    }
-    printf("\nCalculo com vetores E[N] = %lf = %lf\n",cont,cont/15);
-
-
-   }
+ 
    acada100 += 100;
+   aux = 1;
 
 }
 
@@ -99,6 +84,8 @@ int main(){
 
     unsigned long int fila = 0;
     unsigned long int maxFila = 0;
+    double GuardSaida;
+    int contS = 0, contE = 0,contE2;
 
     /**
      Little
@@ -106,6 +93,8 @@ int main(){
    little e_n;
    little e_w_chegada;
    little e_w_saida;
+
+   little e_n_aux,e_w_chegada_aux,e_w_saida_aux;
 
    inicia_little(&e_n);
    inicia_little(&e_w_chegada);
@@ -129,33 +118,30 @@ int main(){
     chegada = (-1.0 / (1.0/intervalo_medio_chegada)) * log(aleatorio());
 
     while(tempo_decorrido <= tempo_simulacao){
-        /*
-        if(chegada > acada100){
-            chegada = acada100;
-            acada100 += 100;
-        }
-        */
-       /*
-        if(chegada > acada100){
-            coletaDados(e_n,e_w_chegada,e_w_saida);
-        }
-        */
+
         tempo_decorrido = !fila ? chegada : minimo(chegada, servico);
 
-        if(tempo_decorrido >= acada100){
-            if(tempo_decorrido == chegada)
-               coletaDados(e_n,e_w_chegada,e_w_saida,0);
-            else
-               coletaDados(e_n,e_w_chegada,e_w_saida,1);
+        if(chegada >= acada100 && aux){
+            contE2 = contE;
+            e_w_chegada_aux = e_w_chegada;
+            e_n_aux = e_n;
+            aux = 0;
         }
-/*
-        if(chegada < servico){
-            //não faz nada
-            //senao, faz com acada100
+
+        if(contE2 == contS && chegada >= acada100){
+            if(GuardSaida >= acada100){
+                coletaDados(e_n_aux,e_w_chegada_aux,e_w_saida_aux,1);
+            }
+            else{
+                coletaDados(e_n_aux,e_w_chegada_aux,e_w_saida_aux,0);
+            }
+            printf("\nGurad:%lf\n",GuardSaida);
         }
-*/
+
         if(tempo_decorrido == chegada){
-            printf("Chegada em %lf.\n", tempo_decorrido);
+            contE++;
+            printf("Chegada em %lf.", tempo_decorrido);
+            printf("   NumeroIf:%d\n",contE);
             if(tempo_decorrido <= 200){
                 vetcheg[aux] = tempo_decorrido;
                 aux++;
@@ -181,7 +167,10 @@ int main(){
 
 
         }else{
-            printf("Saida  em %lf.\n", tempo_decorrido);
+            contS++;
+            GuardSaida = servico;
+            printf("Saida  em %lf.", tempo_decorrido);
+            printf("  NumeroElse:%d\n",contS);
                  if(tempo_decorrido <= 200){
                 vetsaid[aux2] = tempo_decorrido;    
                 aux2++;
@@ -196,7 +185,8 @@ int main(){
             e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior)*e_n.no_eventos;
             e_n.tempo_anterior = tempo_decorrido;
             e_n.no_eventos--;
-
+             
+            e_w_saida_aux = e_w_saida;
             e_w_saida.soma_areas +=
             (tempo_decorrido - e_w_saida.tempo_anterior)*e_w_saida.no_eventos;
             e_w_saida.tempo_anterior = tempo_decorrido;
