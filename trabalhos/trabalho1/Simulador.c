@@ -108,19 +108,20 @@ int main(){
     while(tempo_decorrido <= tempo_simulacao){
 
         tempo_decorrido = !fila ? chegada : minimo(chegada, servico);
-
+        
+        //marca a chegada < acadaT
         if(chegada >= acada100 && aux){
             contE2 = contE;
             e_w_chegada_aux = e_w_chegada;
             e_n_aux = e_n;
             aux = 0;
         }
-/*
-        if(tempo_decorrido > tempo_simulacao && chegada < tempo_simulacao){
-            coletaDados(e_n_aux,e_w_chegada_aux,e_w_saida_aux,1);
+        //trata a exceção para o ultimo caso
+        if(tempo_decorrido > tempo_simulacao && chegada > tempo_simulacao ){
+            coletaDados(e_n_aux,e_w_chegada_aux,e_w_saida,1);
         }
-        */
-
+        
+        //Encontra a Saida da chegada marcada e coleta os dados
         if(contE2 == contS){
             if(GuardSaida >= acada100){
                 coletaDados(e_n_aux,e_w_chegada_aux,e_w_saida_aux,1);
@@ -159,6 +160,8 @@ int main(){
             (tempo_decorrido - e_w_chegada.tempo_anterior)*e_w_chegada.no_eventos;
             e_w_chegada.tempo_anterior = tempo_decorrido;
             e_w_chegada.no_eventos++;
+           // if(tempo_decorrido >= tempo_simulacao)
+               //printf("\n\nUltima chegada:%f\n\n",chegada);
 
 
         }else{
@@ -182,7 +185,9 @@ int main(){
             e_w_saida.soma_areas +=
             (tempo_decorrido - e_w_saida.tempo_anterior)*e_w_saida.no_eventos;
             e_w_saida.tempo_anterior = tempo_decorrido;
-            e_w_saida.no_eventos++;            
+            e_w_saida.no_eventos++;   
+           // if(tempo_decorrido >= tempo_simulacao)
+               //printf("\n\nElse:Ultima chegada:%f\n\n",chegada);         
         }
     }
 
