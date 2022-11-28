@@ -1,4 +1,0 @@
-(chegada,chegadasaida)   
-(chegada,anteriorSaida < 100)
-(chegada,anteriorSaida > 100 < chegada)
-(chegada,anteriorSaida > 100 > chegada)
