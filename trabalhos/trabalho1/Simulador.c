@@ -10,7 +10,7 @@ typedef struct little_
     double soma_areas;
 } little;
 
-int aux = 1;
+int aux = 1, aux2 = 0;
 
 double aleatorio()
 {
@@ -47,27 +47,20 @@ void inicia_little(little *l)
 
 double acadaT, tempo = 100;
 
-void coletaDados(little e_n, little e_w_chegada, little e_w_saida,double soma_tempo_servico, int a)
+void coletaDados(little e_n, little e_w_chegada, little e_w_saida, double soma_tempo_servico)
 {
-    double aux, complementoEn = 0, complementoEw_saida = 0, complementoEw_entrada = 0;
-    if (a == 1)
-    {
-        complementoEw_saida = (acadaT - e_w_saida.tempo_anterior) * (e_w_saida.no_eventos);
-        complementoEw_entrada = (acadaT - e_w_chegada.tempo_anterior) * (e_w_chegada.no_eventos);
-        complementoEn = (acadaT - e_n.tempo_anterior) * (e_n.no_eventos);
-    }
-
-    double e_n_final = (e_n.soma_areas + complementoEn) / acadaT;
-    double e_w_final = ((e_w_chegada.soma_areas + complementoEw_entrada -
-                         (e_w_saida.soma_areas + complementoEw_saida)) /
+    double e_n_final = (e_n.soma_areas) / acadaT;
+    double e_w_final = ((e_w_chegada.soma_areas  -
+                         (e_w_saida.soma_areas )) /
                         (e_w_chegada.no_eventos));
     double lambda = e_w_chegada.no_eventos / acadaT;
-    printf("%lf,%lf", acadaT,e_n_final); //Tempo Atual   E[N]                           
-    printf(",%lf", e_w_final);                                     // E[W]:
-    printf(" ,%lf", e_n_final - lambda * e_w_final); // Erro de Little:
-    printf(",%lf\n", soma_tempo_servico / acadaT);//ocupação
+    printf("%lf,%lf", acadaT, e_n_final);               // Tempo Atual   E[N]
+    printf(",%lf", e_w_final);                          // E[W]:
+    printf(" ,%.15lf", e_n_final - lambda * e_w_final); // Erro de Little:
+    printf(",%lf\n", soma_tempo_servico / acadaT);      // ocupação
 
     acadaT += tempo;
+    aux2 = 0;
 }
 
 int main()
@@ -104,17 +97,10 @@ int main()
 
     // srand(time(NULL));
     srand(10000); // 290  10 5
-    //printf("Tempo de simulacao: 36.000 (segundos).\n");
-    // scanf("%lF",&tempo_simulacao);
+
     tempo_simulacao = 36000;
-
-    //printf("Intervalo medio entre chegadas: 0.2 (segundos).\n");
-    // scanf("%lF",&intervalo_medio_chegada);
     intervalo_medio_chegada = 0.2;
-
-    //printf("Informe o tempo medio de serviço (segundos):\n");
-    // scanf("%lF",&tempo_medio_servico);
-    tempo_medio_servico = 0.19;
+    tempo_medio_servico = 0.198;
 
     // gerando o tempo de chegada da primeira requisicao
     puts("Tempo,E[N],E[W],Erro_Little,Ocupacao");
@@ -125,39 +111,39 @@ int main()
 
         tempo_decorrido = !fila ? chegada : minimo(chegada, servico);
 
-        // marca a chegada < acadaT
+        // marca a ultima  chegada < acadaT
         if (chegada >= acadaT && aux)
         {
             contE2 = contE;
             e_w_chegada_aux = e_w_chegada;
-            e_n_aux = e_n;
+            // e_n_aux = e_n;
             aux = 0;
         }
-        // trata a exceção para o ultimo caso
-        
-        if(tempo_decorrido > tempo_simulacao && chegada > tempo_simulacao && tempo_decorrido == servico){
-            //printf("\n\nUURT\n\n");
-            coletaDados(e_n_aux,e_w_chegada_aux,e_w_saida,soma_tempo_servico,1);
-
-        }
-        
 
         // Encontra a Saida da chegada marcada e coleta os dados
         if (contE2 == contS)
         {
             if (GuardSaida >= acadaT)
             {
-
-                coletaDados(e_n_aux, e_w_chegada_aux, e_w_saida_aux,(soma_tempo_servico - (GuardSaida - acadaT)), 1);
+                e_w_chegada_aux.soma_areas += (acadaT - e_w_chegada_aux.tempo_anterior) * (e_w_chegada_aux.no_eventos - 1);
+                coletaDados(e_n_aux, e_w_chegada_aux, e_w_saida_aux, (soma_tempo_servico - (aux2 + (GuardSaida - acadaT))));
             }
             else
             {
-                e_w_chegada_aux.soma_areas += (GuardSaida - e_w_chegada.tempo_anterior) * e_w_chegada.no_eventos;
-                coletaDados(e_n, e_w_chegada_aux, e_w_saida,soma_tempo_servico, 0);
+                e_w_chegada_aux.soma_areas += (GuardSaida - e_w_chegada.tempo_anterior) * (e_w_chegada.no_eventos - 1);
+                coletaDados(e_n, e_w_chegada_aux, e_w_saida, (soma_tempo_servico - aux2));
             }
-           // printf("\nGurad:%lf\n", GuardSaida);
+            // printf("\nGurad:%lf\n", GuardSaida);
             contE2 = -1;
             aux = 1;
+        }
+
+        // trata a exceção para o ultimo caso
+        if (tempo_decorrido > tempo_simulacao &&  tempo_decorrido == servico)
+        {
+           // printf("\n\nUURT\n\n");
+            e_w_chegada_aux.soma_areas += (acadaT - e_w_chegada_aux.tempo_anterior) * (e_w_chegada_aux.no_eventos - 1);
+            coletaDados(e_n_aux, e_w_chegada_aux, e_w_saida_aux, (soma_tempo_servico - (aux2 + (GuardSaida - acadaT))));
         }
 
         if (tempo_decorrido == chegada)
@@ -200,21 +186,30 @@ int main()
             {
                 servico = tempo_decorrido + (-1.0 / (1.0 / tempo_medio_servico)) * log(aleatorio());
                 soma_tempo_servico += servico - tempo_decorrido;
+                aux2 = servico - tempo_decorrido;
             }
             // little
+            e_n_aux = e_n;
+
             e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
             e_n.tempo_anterior = tempo_decorrido;
             e_n.no_eventos--;
+
+            e_n_aux.soma_areas += (acadaT - e_n_aux.tempo_anterior) * e_n_aux.no_eventos;
+
+            e_w_saida_aux = e_w_saida;
 
             e_w_saida.soma_areas +=
                 (tempo_decorrido - e_w_saida.tempo_anterior) * e_w_saida.no_eventos;
             e_w_saida.tempo_anterior = tempo_decorrido;
             e_w_saida.no_eventos++;
+
+            e_w_saida_aux.soma_areas += (acadaT - e_w_saida_aux.tempo_anterior) * e_w_saida_aux.no_eventos;
             // if(tempo_decorrido >= tempo_simulacao)
             // printf("\n\nElse:Ultima chegada:%f\n\n",chegada);
         }
     }
-   // printf("\nConte:%d\n",contE);
+    // printf("\nConte:%d\n",contE);
 
     e_w_chegada.soma_areas +=
         (tempo_decorrido - e_w_chegada.tempo_anterior) * e_w_chegada.no_eventos;
@@ -240,5 +235,6 @@ int main()
     printf("Max fila: %ld\n", maxFila);
     printf("Aux m em %d.\n", aux);
     */
+
     return 0;
 }
