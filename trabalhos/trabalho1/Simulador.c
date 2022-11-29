@@ -10,7 +10,7 @@ typedef struct little_
     double soma_areas;
 } little;
 
-int aux = 1, aux2 = 0, fezUltimo = 0;
+int aux = 1, aux2 = 0;
 
 double aleatorio()
 {
@@ -100,7 +100,7 @@ int main()
 
     tempo_simulacao = 36000;
     intervalo_medio_chegada = 0.2;
-    tempo_medio_servico = 0.198; // 80% = 0,16 ; 90% = 0,18 ; 95% = 0,19; 99% = 0,198
+    tempo_medio_servico = 0.16; // 80% = 0,16 ; 90% = 0,18 ; 95% = 0,19; 99% = 0,198
 
     puts("Tempo,E[N],E[W],Erro_Little,Ocupacao");
     // gerando o tempo de chegada da primeira requisicao
@@ -153,7 +153,7 @@ int main()
         {
             e_w_chegada_aux.no_eventos = e_w_chegada_aux.no_eventos - 1;
             e_w_chegada_aux.soma_areas += (acadaT - e_w_chegada_aux.tempo_anterior) * (e_w_chegada_aux.no_eventos);
-            // Supondo GuardSaida = 103 e acadaT = 100 teremos que 3 * no_eventos foram somados indevidamente,desse modo estamos removendo essa parte e somamos 1 unidade no.eventos, ja que a saida ocorre após acadaT.
+            
             e_n_aux.no_eventos++;
             e_n_aux.soma_areas = e_n_aux.soma_areas - (GuardSaida - acadaT) * e_n_aux.no_eventos;
 
@@ -245,16 +245,16 @@ int main()
     double e_w_final = (e_w_chegada.soma_areas - e_w_saida.soma_areas) / e_w_chegada.no_eventos;
 
     double lambda = e_w_chegada.no_eventos / tempo_decorrido;
-/*
+
     printf("\nE[N]: %lf\n", e_n_final); // lF
     printf("E[W]: %lf\n", e_w_final);   // lF
-    printf("lambda: %lf\n\n", lambda);  // lF
+    //printf("lambda: %lf\n\n", lambda);  // lF
 
-    printf("Erro de Little: %.20lf\n\n", e_n_final - lambda * e_w_final); // lF
+    printf("Erro de Little: %.20lf\n", e_n_final - lambda * e_w_final); // lF
 
     printf("Ocupacao: %lf\n", soma_tempo_servico / maximo(tempo_decorrido, servico)); // lF
-    printf("Max fila: %ld\n", maxFila);
-    printf("Aux m em %d.\n", aux);
-*/
+    //printf("Max fila: %ld\n", maxFila);
+    //printf("Aux m em %d.\n", aux);
+
     return 0;
 }
