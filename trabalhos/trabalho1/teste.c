@@ -79,6 +79,7 @@ int main()
     unsigned long int fila = 0;
     unsigned long int maxFila = 0;
     double GuardSaida;
+    int contS = 0, contE = 0, contE2;
     acadaT = tempo;
 
     /**
@@ -113,13 +114,14 @@ int main()
         // marca a ultima  chegada < acadaT
         if (chegada >= acadaT && aux)
         {
+            contE2 = contE;
             e_n_aux = e_n;
             e_w_chegada_aux = e_w_chegada;
             aux = 0;
         }
 
         // Encontra a Saida da chegada marcada e coleta os dados
-        if (e_w_chegada_aux.no_eventos == e_w_saida.no_eventos)
+        if (contE2 == contS)
         {
             if (GuardSaida >= acadaT)
             {
@@ -142,6 +144,7 @@ int main()
                 coletaDados(e_n_aux, e_w_chegada_aux, e_w_saida_aux, (soma_tempo_servico - aux2));
             }
             // printf("\nGurad:%lf\n", GuardSaida);
+            contE2 = -1;
             aux = 1;
         }
 
@@ -159,6 +162,7 @@ int main()
 
         if (tempo_decorrido == chegada)
         {
+            contE++;
             // printf("Chegada em %lf.", tempo_decorrido);
             // printf("   NumeroIf:%d\n",contE);
             // aux += tempo_decorrido;{}
@@ -185,6 +189,7 @@ int main()
         }
         else
         {
+            contS++;
             GuardSaida = servico;
             e_w_saida_aux = e_w_saida;
             //  printf("Saida  em %lf.", tempo_decorrido);
@@ -207,7 +212,6 @@ int main()
             
             //Quando encontramos chegada < acadaT calculamos um novo e_n soma_areas desconsiderando novas chegadas
             //pois e_n_aux = e_n quando chegada < acadaT e só incrementa soma_areas para as saidas
-            //if(tempo_decorrido < acada t) faca soma areas
             e_n_aux.soma_areas += (tempo_decorrido - e_n_aux.tempo_anterior) * e_n_aux.no_eventos;
             e_n_aux.tempo_anterior = tempo_decorrido;
             e_n_aux.no_eventos--;
