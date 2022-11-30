@@ -113,9 +113,6 @@ int main()
 
         if (tempo_decorrido == chegada)
         {
-            // printf("Chegada em %lf.", tempo_decorrido);
-            // printf("   NumeroIf:%d\n",contE);
-            // aux += tempo_decorrido;{}
             if (!fila)
             {
                 servico = tempo_decorrido + (-1.0 / (1.0 / tempo_medio_servico)) * log(aleatorio());
@@ -125,7 +122,7 @@ int main()
             maxFila = maximo(maxFila, fila);
             chegada = tempo_decorrido + (-1.0 / (1.0 / intervalo_medio_chegada)) * log(aleatorio());
             // little
-            // printf("\nTempo DEcorrido en:%lf\n",tempo_decorrido);
+
             e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
             e_n.tempo_anterior = tempo_decorrido;
             e_n.no_eventos++;
@@ -134,15 +131,10 @@ int main()
                 (tempo_decorrido - e_w_chegada.tempo_anterior) * e_w_chegada.no_eventos;
             e_w_chegada.tempo_anterior = tempo_decorrido;
             e_w_chegada.no_eventos++;
-            // if(tempo_decorrido >= tempo_simulacao)
-            // printf("\n\nUltima chegada:%f\n\n",chegada);
         }
         else 
             if (tempo_decorrido == servico)
             {
-                //  printf("Saida  em %lf.", tempo_decorrido);
-                // printf("  NumeroElse:%d\n",contS);
-
                 fila--;
 
                 if (fila)
@@ -167,32 +159,24 @@ int main()
             else if (tempo_decorrido == acadaT)
             {
                 if(e_w_chegada.no_eventos == e_w_saida.no_eventos){
-                    //printf("Saida == Entrada\n");
                     e_n_aux = e_n;
                     //supondo AcadaT = 100, chegada = 95 e saida = 98 temos que e_n foi calculado corretamente para if(95) mas ao fim do calculo de e_n, e_n.no_eventos foi incrementado para a proxima chegada(ex:104), portanto quando o e_n for ser calculado para a saida de 95 (98) o e_n.no_eventos tera 1 unidade a mais do que deveria, portanto estamos retirando essa parcela indevida.
                     e_n_aux.soma_areas = e_n.soma_areas - (((e_n.tempo_anterior - e_w_chegada.tempo_anterior) * (e_n.no_eventos + 1)) - ((e_n.tempo_anterior - e_w_chegada.tempo_anterior) * e_n.no_eventos));
 
                     e_w_chegada_aux = e_w_chegada;
                     e_w_chegada_aux.soma_areas += (e_w_saida.tempo_anterior - e_w_chegada.tempo_anterior) * (e_w_chegada.no_eventos - 1);
-                    //printf("\nSaida:%lf, chegada:%lf\n",e_w_saida_aux.soma_areas, e_w_chegada_aux.soma_areas);
-
                     coletaDados(e_n_aux,e_w_chegada_aux,e_w_saida,soma_tempo_servico);
 
                 }
                 else{
-                    //printf("Saida != Entrada\n");
                     e_n_aux = e_n;
-                    //e_n_aux.no_eventos -= 1; 
                     e_n_aux.soma_areas += (acadaT - e_n.tempo_anterior) * (e_n.no_eventos );
 
                     e_w_chegada_aux = e_w_chegada;
-                    //e_w_chegada_aux.no_eventos -= 1;
                     e_w_chegada_aux.soma_areas += (acadaT - e_w_chegada.tempo_anterior) * (e_w_chegada.no_eventos );
 
                     e_w_saida_aux = e_w_saida;
-                    //e_w_saida_aux.no_eventos -= 1;
                     e_w_saida_aux.soma_areas += (acadaT - e_w_saida.tempo_anterior) * (e_w_saida.no_eventos);
-                    //printf("\nchegada:%lf, Saida:%lf\n",e_w_chegada_aux.soma_areas,e_w_saida_aux.soma_areas);
                     coletaDados(e_n_aux,e_w_chegada_aux,e_w_saida_aux,soma_tempo_servico);
                     
                 }
@@ -200,7 +184,6 @@ int main()
 
 
     }
-    // printf("\nConte:%d\n",contE);
 
     e_w_chegada.soma_areas +=
         (tempo_decorrido - e_w_chegada.tempo_anterior) * e_w_chegada.no_eventos;
@@ -215,7 +198,7 @@ int main()
     double e_w_final = (e_w_chegada.soma_areas - e_w_saida.soma_areas) / e_w_chegada.no_eventos;
 
     double lambda = e_w_chegada.no_eventos / tempo_decorrido;
-/*
+
     printf("\nE[N]: %lf\n", e_n_final); // lF
     printf("E[W]: %lf\n", e_w_final);   // lF
     // printf("lambda: %lf\n\n", lambda);  // lF
@@ -225,7 +208,7 @@ int main()
     printf("Ocupacao: %lf\n", soma_tempo_servico / maximo(tempo_decorrido, servico)); // lF
     // printf("Max fila: %ld\n", maxFila);
     // printf("Aux m em %d.\n", aux);
-    */
+    
 
     return 0;
 }
