@@ -10,8 +10,6 @@ typedef struct little_
     double soma_areas;
 } little;
 
-int aux = 1, aux2 = 0;
-
 double aleatorio()
 {
     double u = rand() / ((double)RAND_MAX + 1);
@@ -61,7 +59,6 @@ void coletaDados(little e_n, little e_w_chegada, little e_w_saida, double soma_t
     printf(",%lf\n", soma_tempo_servico / acadaT);      // ocupação
 
     acadaT += tempo;
-    aux2 = 0;
 }
 
 int main()
@@ -80,6 +77,10 @@ int main()
     unsigned long int fila = 0;
     unsigned long int maxFila = 0;
     double GuardSaida;
+    double TAM_pacote;
+    double TAM_max_pacote = 1500;
+    double link_capacidade = 1000000;
+    double TAM_total_pacotes = 0;
     acadaT = tempo;
 
     /**
@@ -89,8 +90,6 @@ int main()
     little e_w_chegada;
     little e_w_saida;
 
-    little e_n_aux, e_w_chegada_aux, e_w_saida_aux;
-
     inicia_little(&e_n);
     inicia_little(&e_w_chegada);
     inicia_little(&e_w_saida);
@@ -99,8 +98,8 @@ int main()
     srand(10000);
 
     tempo_simulacao = 36000;
-    intervalo_medio_chegada = 0.2;
-    tempo_medio_servico = 0.198; // 80% = 0,16 ; 90% = 0,18 ; 95% = 0,19; 99% = 0,198
+    intervalo_medio_chegada = 0.01;
+    //tempo_medio_servico = 0.16; // 80% = 0,16 ; 90% = 0,18 ; 95% = 0,19; 99% = 0,198
 
     puts("Tempo,E[N],E[W],Erro_Little,Ocupacao");
     // gerando o tempo de chegada da primeira requisicao
@@ -113,19 +112,17 @@ int main()
 
         if (tempo_decorrido == chegada)
         {
-            // printf("Chegada em %lf.", tempo_decorrido);
-            // printf("   NumeroIf:%d\n",contE);
-            // aux += tempo_decorrido;{}
             if (!fila)
             {
-                servico = tempo_decorrido + (-1.0 / (1.0 / tempo_medio_servico)) * log(aleatorio());
+                TAM_pacote = (-1.0 / (1.0 / TAM_max_pacote)) * log(aleatorio());
+                servico = tempo_decorrido + (-1.0 / (1.0 / (TAM_pacote/link_capacidade))) * log(aleatorio());
                 soma_tempo_servico += servico - tempo_decorrido;
+                TAM_total_pacotes += TAM_pacote;
             }
             fila++;
             maxFila = maximo(maxFila, fila);
             chegada = tempo_decorrido + (-1.0 / (1.0 / intervalo_medio_chegada)) * log(aleatorio());
             // little
-            // printf("\nTempo DEcorrido en:%lf\n",tempo_decorrido);
             e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
             e_n.tempo_anterior = tempo_decorrido;
             e_n.no_eventos++;
@@ -134,24 +131,20 @@ int main()
                 (tempo_decorrido - e_w_chegada.tempo_anterior) * e_w_chegada.no_eventos;
             e_w_chegada.tempo_anterior = tempo_decorrido;
             e_w_chegada.no_eventos++;
-            // if(tempo_decorrido >= tempo_simulacao)
-            // printf("\n\nUltima chegada:%f\n\n",chegada);
         }
         else 
             if (tempo_decorrido == servico)
             {
-                //  printf("Saida  em %lf.", tempo_decorrido);
-                // printf("  NumeroElse:%d\n",contS);
-
                 fila--;
 
                 if (fila)
                 {
-                    servico = tempo_decorrido + (-1.0 / (1.0 / tempo_medio_servico)) * log(aleatorio());
+                    TAM_pacote = (-1.0 / (1.0 / TAM_max_pacote)) * log(aleatorio());
+                    servico = tempo_decorrido + (-1.0 / (1.0 / (TAM_pacote/link_capacidade))) * log(aleatorio());
                     soma_tempo_servico += servico - tempo_decorrido;
+                    TAM_total_pacotes += TAM_pacote;
                 }
                 // little
-
                 e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
                 e_n.tempo_anterior = tempo_decorrido;
                 e_n.no_eventos--;
@@ -166,7 +159,6 @@ int main()
             }
             else if (tempo_decorrido == acadaT)
             {
-            // printf("%lF,", coleta_dados * 100);
             e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
             e_w_chegada.soma_areas += (tempo_decorrido - e_w_chegada.tempo_anterior) * e_w_chegada.no_eventos;
             e_w_saida.soma_areas += (tempo_decorrido - e_w_saida.tempo_anterior) * e_w_saida.no_eventos;
