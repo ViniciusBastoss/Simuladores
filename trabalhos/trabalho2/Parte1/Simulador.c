@@ -78,11 +78,10 @@ int main()
     unsigned long int maxFila = 0;
     double GuardSaida;
     double TAM_pacote;
-    double TAM_max_pacote = 1500;
-    double link_capacidade = 1000000;
-    double TAM_total_pacotes = 0;
+    double soma_total_pacot = 0;
     acadaT = tempo;
-
+    double TAM_max_pacote;
+    double link_capacidade;
     /**
      Little
     */
@@ -96,7 +95,8 @@ int main()
 
     // srand(time(NULL));
     srand(10000);
-
+    TAM_max_pacote = 1500;
+    link_capacidade = 2500*100;
     tempo_simulacao = 36000;
     intervalo_medio_chegada = 0.01;
     //tempo_medio_servico = 0.16; // 80% = 0,16 ; 90% = 0,18 ; 95% = 0,19; 99% = 0,198
@@ -117,7 +117,7 @@ int main()
                 TAM_pacote = (-1.0 / (1.0 / TAM_max_pacote)) * log(aleatorio());
                 servico = tempo_decorrido + (-1.0 / (1.0 / (TAM_pacote/link_capacidade))) * log(aleatorio());
                 soma_tempo_servico += servico - tempo_decorrido;
-                TAM_total_pacotes += TAM_pacote;
+                soma_total_pacot += TAM_pacote;
             }
             fila++;
             maxFila = maximo(maxFila, fila);
@@ -142,7 +142,7 @@ int main()
                     TAM_pacote = (-1.0 / (1.0 / TAM_max_pacote)) * log(aleatorio());
                     servico = tempo_decorrido + (-1.0 / (1.0 / (TAM_pacote/link_capacidade))) * log(aleatorio());
                     soma_tempo_servico += servico - tempo_decorrido;
-                    TAM_total_pacotes += TAM_pacote;
+                    soma_total_pacot += TAM_pacote;
                 }
                 // little
                 e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
@@ -186,17 +186,22 @@ int main()
     double e_w_final = (e_w_chegada.soma_areas - e_w_saida.soma_areas) / e_w_chegada.no_eventos;
 
     double lambda = e_w_chegada.no_eventos / tempo_decorrido;
-/*
+
     printf("\nE[N]: %lf\n", e_n_final); // lF
     printf("E[W]: %lf\n", e_w_final);   // lF
     // printf("lambda: %lf\n\n", lambda);  // lF
 
     printf("Erro de Little: %.20lf\n", e_n_final - lambda * e_w_final); // lF
 
-    printf("Ocupacao: %lf\n", soma_tempo_servico / maximo(tempo_decorrido, servico)); // lF
+    printf("Ocupacao: %lf\n", (soma_tempo_servico / maximo(tempo_decorrido, servico))); // lF
     // printf("Max fila: %ld\n", maxFila);
     // printf("Aux m em %d.\n", aux);
-    */
+    double totalpact = 100 * maximo(tempo_decorrido,servico);
+    //double somar = totalpact * 0.3
+   // printf("totalpac:%d\n", totalpact);
+    printf("somaTotalpacotes:%f\n",soma_total_pacot);
+    printf("550:%f", (totalpact * 0 * 550 + totalpact * 0 * 40 + totalpact * 1 * 1500));
+    
 
     return 0;
 }
