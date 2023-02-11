@@ -65,15 +65,15 @@ double gerapacote(){
     double porcentagem = rand() % 100;
     if(porcentagem < 50){
         cont1++;
-        return (-1.0 / (1.0 / 550)) * log(aleatorio());
+        return 550;
     }
     if(porcentagem < 90){
         cont2++;
-        return (-1.0 / (1.0 / 40)) * log(aleatorio());
+        return 40;
     }
     if(porcentagem >=  90){
         cont3++;
-        return (-1.0 / (1.0 / 1500)) * log(aleatorio());
+        return 1500;
     }
         
 }
@@ -89,11 +89,10 @@ int main()
     double tempo_decorrido = 0.0;
 
     double intervalo_medio_chegada;
-    double tempo_medio_servico;
+   // double tempo_medio_servico;
 
     unsigned long int fila = 0;
     unsigned long int maxFila = 0;
-    double GuardSaida;
     double pacote;
     double soma_total_pacot = 0;
     acadaT = tempo;
