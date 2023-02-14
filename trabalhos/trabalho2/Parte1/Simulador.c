@@ -43,7 +43,7 @@ void inicia_little(little *l)
     l->soma_areas = 0.0;
 }
 int cont1 = 0,cont2 = 0, cont3 = 0;
-double acadaT , tempo = 100;
+double acadaT ;
 
 void coletaDados(little e_n, little e_w_chegada, little e_w_saida, double soma_tempo_servico)
 {
@@ -58,7 +58,7 @@ void coletaDados(little e_n, little e_w_chegada, little e_w_saida, double soma_t
     printf(",%.15lf", e_n_final - lambda * e_w_final); // Erro de Little:
     printf(",%lf\n", soma_tempo_servico / acadaT);      // ocupação
 
-    acadaT += tempo;
+    acadaT += 100;
 }
 
 double gerapacote(){
@@ -94,9 +94,7 @@ int main()
     unsigned long int fila = 0;
     unsigned long int maxFila = 0;
     double pacote;
-    double soma_total_pacot = 0;
-    acadaT = tempo;
-    double TAM_max_pacote;
+    acadaT = 100;
     double link_capacidade;
     /**
      Little
@@ -110,13 +108,10 @@ int main()
     inicia_little(&e_w_saida);
 
     // srand(time(NULL));
-    srand(10000);
-   // TAM_max_pacote = 1500;
-    link_capacidade = 735*100; //60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
+    srand(4800);
+    link_capacidade = 551.25*100; //60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
     tempo_simulacao = 36000;
     intervalo_medio_chegada = 0.01;
-    //tempo_medio_servico = 0.16; // 80% = 0,16 ; 90% = 0,18 ; 95% = 0,19; 99% = 0,198
-
     puts("Tempo,E[N],E[W],Erro_Little,Ocupacao");
     // gerando o tempo de chegada da primeira requisicao
     chegada = (-1.0 / (1.0 / intervalo_medio_chegada)) * log(aleatorio());
@@ -133,7 +128,6 @@ int main()
                 pacote = gerapacote();
                 servico = tempo_decorrido + (-1.0 / (1.0 / (pacote/link_capacidade))) * log(aleatorio());
                 soma_tempo_servico += servico - tempo_decorrido;
-                soma_total_pacot += pacote;
             }
             fila++;
             maxFila = maximo(maxFila, fila);
@@ -158,7 +152,6 @@ int main()
                     pacote = gerapacote();
                     servico = tempo_decorrido + (-1.0 / (1.0 / (pacote/link_capacidade))) * log(aleatorio());
                     soma_tempo_servico += servico - tempo_decorrido;
-                    soma_total_pacot += pacote;
                 }
                 // little
                 e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
@@ -210,15 +203,11 @@ int main()
     printf("Erro de Little: %.20lf\n", e_n_final - lambda * e_w_final); // lF
 
     printf("Ocupacao: %lf\n", (soma_tempo_servico / maximo(tempo_decorrido, servico))); // lF
-    // printf("Max fila: %ld\n", maxFila);
-    // printf("Aux m em %d.\n", aux);
+
     double totalpact = 100 * maximo(tempo_decorrido,servico);
-    //double somar = totalpact * 0.3
-    printf("totalpac:%d\n", totalpact);
-    printf("\n550:%f,  40:%f 1500:%f\n", cont1/totalpact,cont2/totalpact,cont3/totalpact);
-    printf("somaTotalpacotes:%f\n",soma_total_pacot);
-    printf("550:%f", (totalpact * 0.5 * 550 + totalpact * 0.4 * 40 + totalpact * 0.1 * 1500));
-    
+    printf("\nTotal esperado de pacotes gerados:%d\n", (int)totalpact);
+    printf("\nPorcentagem relativa a quantidade de cada tipo de pacote gerado:\n");
+    printf("550:%f,  40:%f 1500:%f\n", cont1/totalpact,cont2/totalpact,cont3/totalpact);
 
     return 0;
 }
