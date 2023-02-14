@@ -109,7 +109,7 @@ int main()
 
     // srand(time(NULL));
     srand(4800);
-    link_capacidade = 551.25*100; //60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
+    link_capacidade = 445.45*100; //60% = 735 80% = 551.25   95% = 464.21 99% = 445.45
     tempo_simulacao = 36000;
     intervalo_medio_chegada = 0.01;
     puts("Tempo,E[N],E[W],Erro_Little,Ocupacao");
@@ -195,7 +195,7 @@ int main()
     double e_w_final = (e_w_chegada.soma_areas - e_w_saida.soma_areas) / e_w_chegada.no_eventos;
 
     double lambda = e_w_chegada.no_eventos / tempo_decorrido;
-
+    
     printf("\nE[N]: %lf\n", e_n_final); // lF
     printf("E[W]: %lf\n", e_w_final);   // lF
     // printf("lambda: %lf\n\n", lambda);  // lF
