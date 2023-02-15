@@ -109,7 +109,7 @@ int main()
 
     // srand(time(NULL));
     srand(4400);
-    link_capacidade = 445.45*100; //60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
+    link_capacidade = 735*100; //60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
     tempo_simulacao = 36000;
     intervalo_medio_chegada = 0.01;
     puts("Tempo,E[N],E[W],Erro_Little,Ocupacao");
@@ -126,7 +126,7 @@ int main()
             if (!fila)
             {
                 pacote = gerapacote();
-                servico = tempo_decorrido + (-1.0 / (1.0 / (pacote/link_capacidade))) * log(aleatorio());
+                servico = tempo_decorrido + pacote/link_capacidade;
                 soma_tempo_servico += servico - tempo_decorrido;
             }
             fila++;
@@ -150,7 +150,7 @@ int main()
                 if (fila)
                 {
                     pacote = gerapacote();
-                    servico = tempo_decorrido + (-1.0 / (1.0 / (pacote/link_capacidade))) * log(aleatorio());
+                    servico = tempo_decorrido + pacote/link_capacidade;
                     soma_tempo_servico += servico - tempo_decorrido;
                 }
                 // little

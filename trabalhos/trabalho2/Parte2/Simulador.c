@@ -137,7 +137,7 @@ int main()
             if (!fila)
             {
                 pacote = gerapacote();
-                servico = tempo_decorrido + (-1.0 / (1.0 / (pacote/link_capacidade))) * log(aleatorio());
+                servico = tempo_decorrido + pacote/link_capacidade;
                 soma_tempo_servico += servico - tempo_decorrido;
             }
             fila++;
@@ -162,7 +162,7 @@ int main()
                 if (fila)
                 {
                     pacote = gerapacote();
-                    servico = tempo_decorrido + (-1.0 / (1.0 / (pacote/link_capacidade))) * log(aleatorio());
+                    servico = tempo_decorrido + pacote/link_capacidade;
                     soma_tempo_servico += servico - tempo_decorrido;
                 }
                 // little
@@ -225,7 +225,7 @@ int main()
     printf("\n550:%f,  40:%f 1500:%f\n", cont550/totalpact,cont40/totalpact,cont1500/totalpact);
     */
    printf("\nElementos na lista:%d", qtdElementos(lista_chamadas));
-  // mostrarLista(lista_chamadas);
+   mostrarLista(lista_chamadas);
   // printf("\nElementos na lista:%lf", lista_chamadas->inicio);
     return 0;
 }
