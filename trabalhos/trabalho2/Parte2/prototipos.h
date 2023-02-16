@@ -25,4 +25,4 @@ NO* removerElemento(NO *lista, double valor);
 
 void liberar(NO *lista);
 
-double trata_pacote_transmissao(NO *lista_chamadas, double tempo_decorrido);
+NO* trata_pacote_transmissao(NO *lista_chamadas, double tempo_decorrido, double *chegada_chamada);

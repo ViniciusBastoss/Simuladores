@@ -121,8 +121,8 @@ int main()
 
     // srand(time(NULL));
     srand(4400);
-    link_capacidade = 445.45 * 100; // 60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
-    tempo_simulacao = 36000;
+    link_capacidade = 10000 * 100; // 60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
+    tempo_simulacao = 360000;
     intervalo_medio_chegada = 0.01;
     inter_medio_chegada_chamada = 5;
     duracao_media_chamada = 80;
@@ -132,14 +132,14 @@ int main()
     chegada = (-1.0 / (1.0 / intervalo_medio_chegada)) * log(aleatorio());
     chamada = (-1.0 / (1.0 / inter_medio_chegada_chamada)) * log(aleatorio());
 
-                duracao_chamada = tempo_decorrido + (-1.0 / (1.0 / duracao_media_chamada)) * log(aleatorio());
-            lista_chamadas = inserirFinal(lista_chamadas, chamada, duracao_chamada);
-            printf("\n%lf  %lf", chamada, tempo_decorrido);
-            chamada = tempo_decorrido + (-1.0 / (1.0 / inter_medio_chegada_chamada)) * log(aleatorio());
-mostrarLista(lista_chamadas);
-  printf("\n%lf  %lf", chamada, tempo_decorrido);
+    duracao_chamada = tempo_decorrido + (-1.0 / (1.0 / duracao_media_chamada)) * log(aleatorio());
+    lista_chamadas = inserirFinal(lista_chamadas, chamada, duracao_chamada);
+    printf("\n%lf  %lf", chamada, tempo_decorrido);
+    chamada = tempo_decorrido + (-1.0 / (1.0 / inter_medio_chegada_chamada)) * log(aleatorio());
+    mostrarLista(lista_chamadas);
+    printf("\n%lf  %lf", chamada, tempo_decorrido);
   //puts("");
-    chegada_transmissao = trata_pacote_transmissao(lista_chamadas, tempo_decorrido);
+    lista_chamadas = trata_pacote_transmissao(lista_chamadas, tempo_decorrido,&chegada_transmissao);
 
     while (tempo_decorrido <= tempo_simulacao)
     {
@@ -226,7 +226,8 @@ mostrarLista(lista_chamadas);
             e_w_chegada.tempo_anterior = tempo_decorrido;
             e_w_chegada.no_eventos++;
 
-            chegada_transmissao = trata_pacote_transmissao(lista_chamadas, tempo_decorrido);
+             lista_chamadas = trata_pacote_transmissao(lista_chamadas, tempo_decorrido, &chegada_transmissao);
+            //mostrarLista(lista_chamadas);
         }
     }
     e_w_chegada.soma_areas +=

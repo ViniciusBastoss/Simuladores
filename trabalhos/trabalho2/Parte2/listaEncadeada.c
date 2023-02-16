@@ -133,6 +133,7 @@ int qtdElementos(NO *lista){					//FEITA
 }
 
 NO* removerElemento(NO *lista, double valor){		//FEITA
+    NO *aux;
 	if( lista == NULL){
 		//printf("Lista Vazia.\n");
 		return lista;
@@ -141,8 +142,9 @@ NO* removerElemento(NO *lista, double valor){		//FEITA
 		NO *aux;
 		//INICIO
 		if(lista->inicio == valor){	
-			printf("Valor %lf encontrado.\n", lista->fim);
-			return lista->proximo;
+			//printf("Valor %lf encontrado.\n", lista->fim);
+			aux = lista->proximo;
+			return aux;
 		}
 		for(aux=lista; aux->proximo != NULL; aux= aux->proximo){
 			if( (aux->proximo)->inicio == valor){
@@ -167,12 +169,12 @@ void liberar(NO *lista){						//FEITA
 }
 
 
-double trata_pacote_transmissao(NO *lista_chamadas, double tempo_decorrido){
+NO* trata_pacote_transmissao(NO *lista_chamadas, double tempo_decorrido, double *chegada_chamada){
    NO *aux, *transmissao_atual;
    double menor_tempo = 50000000000;
    //printf("eieie");
    if(lista_chamadas == NULL){
-	return 10000000.0;
+	return lista_chamadas;
    }
 	  if(lista_chamadas->proximo == NULL){
 		menor_tempo = lista_chamadas->prox_pacote;
@@ -182,8 +184,11 @@ double trata_pacote_transmissao(NO *lista_chamadas, double tempo_decorrido){
 	for(aux = lista_chamadas; aux->proximo != NULL; aux = aux->proximo){
 		if(aux->fim < tempo_decorrido){
 			//printf("\nTempo_Atual: %lf", tempo_decorrido);
-			printf("\nRemovido: Inicio:%lf    fim:%lf   proxpacote:%lf", aux->inicio, aux->fim, aux->prox_pacote);
+			//printf("\nRemovido: Inicio:%lf    fim:%lf   proxpacote:%lf", aux->inicio, aux->fim, aux->prox_pacote);
+			//mostrarLista(lista_chamadas);
 			lista_chamadas = removerElemento(lista_chamadas, aux->inicio);
+			//mostrarLista(lista_chamadas);
+
 		}
 		else
 		   if(aux->prox_pacote < menor_tempo){
@@ -196,7 +201,9 @@ double trata_pacote_transmissao(NO *lista_chamadas, double tempo_decorrido){
 		//exit(10);
 	//printf("kkkk");
 	//printf("\nTempo_decorrido: %lf", tempo_decorrido);
-	return menor_tempo;
+	//mostrarLista(lista_chamadas);
+	*chegada_chamada = menor_tempo;
+	return lista_chamadas;
 
 	
     
