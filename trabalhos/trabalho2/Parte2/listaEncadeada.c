@@ -171,7 +171,7 @@ void liberar(NO *lista){						//FEITA
 
 NO* trata_pacote_transmissao(NO *lista_chamadas, double tempo_decorrido, double *chegada_chamada){
    NO *aux, *transmissao_atual;
-   double menor_tempo = 50000000000;
+   double menor_tempo = lista_chamadas->prox_pacote * 10000;
    if(lista_chamadas == NULL){
 	return lista_chamadas;
    }

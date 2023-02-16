@@ -28,6 +28,20 @@ double minimo(double num1, double num2)
     return num2;
 }
 
+double minimo4(double num1, double num2, double num3, double num4)
+{
+    if (num1 < num2 && num1 < num3 && num1 < num4)
+    {
+        return num1;
+    }
+    if(num2 < num3 && num2 < num4)
+       return num2;
+
+    if(num3 < num4)
+      return num3;
+    return num4;
+}
+
 double maximo(double num1, double num2)
 {
     if (num1 < num2)
@@ -121,11 +135,11 @@ int main()
 
     // srand(time(NULL));
     srand(4400);
-    link_capacidade = 10000 * 100; // 60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
-    tempo_simulacao = 360000;
+    link_capacidade = 4512.5 * 164; // 60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
+    tempo_simulacao = 36000;
     intervalo_medio_chegada = 0.01;
     inter_medio_chegada_chamada = 5;
-    duracao_media_chamada = 80;
+    duracao_media_chamada = 70;
     chegada_transmissao = tempo_simulacao * 2;
     puts("Tempo,E[N],E[W],Erro_Little,Ocupacao");
     // gerando o tempo de chegada da primeira requisicao
@@ -140,9 +154,9 @@ int main()
     lista_chamadas = trata_pacote_transmissao(lista_chamadas, tempo_decorrido,&chegada_transmissao);
 
     while (tempo_decorrido <= tempo_simulacao)
-    {
-
-        tempo_decorrido = !fila ? minimo(minimo(minimo(chegada, acadaT), chamada), chegada_transmissao) : minimo(minimo(minimo(minimo(chegada, servico), acadaT), chamada), chegada_transmissao);
+    {                              
+                                                                                           
+        tempo_decorrido = !fila ? minimo4(chegada, acadaT, chamada, chegada_transmissao) : minimo( minimo4(chegada, acadaT, chamada, chegada_transmissao), servico);
 
         if (tempo_decorrido == chegada)
         {

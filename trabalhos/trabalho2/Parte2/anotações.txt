@@ -1,0 +1,9 @@
+//3610  
+    // srand(time(NULL));
+    srand(4400);
+    link_capacidade = 4512.5 * 164; // 60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
+    tempo_simulacao = 360000;
+    intervalo_medio_chegada = 0.01;
+    inter_medio_chegada_chamada = 16;
+    duracao_media_chamada = 80;
+    chegada_transmissao = tempo_simulacao * 2;
