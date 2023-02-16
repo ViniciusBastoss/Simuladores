@@ -134,11 +134,9 @@ int main()
 
     duracao_chamada = tempo_decorrido + (-1.0 / (1.0 / duracao_media_chamada)) * log(aleatorio());
     lista_chamadas = inserirFinal(lista_chamadas, chamada, duracao_chamada);
-    printf("\n%lf  %lf", chamada, tempo_decorrido);
     chamada = tempo_decorrido + (-1.0 / (1.0 / inter_medio_chegada_chamada)) * log(aleatorio());
-    mostrarLista(lista_chamadas);
-    printf("\n%lf  %lf", chamada, tempo_decorrido);
-  //puts("");
+
+
     lista_chamadas = trata_pacote_transmissao(lista_chamadas, tempo_decorrido,&chegada_transmissao);
 
     while (tempo_decorrido <= tempo_simulacao)
