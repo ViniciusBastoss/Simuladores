@@ -109,7 +109,7 @@ int main()
 
     // srand(time(NULL));
     srand(4400);
-    link_capacidade = 735*100; //60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
+    link_capacidade = 445.45*100; //60% = 735 80% = 551.25   95% = 464.21 99% = 445.45
     tempo_simulacao = 36000;
     intervalo_medio_chegada = 0.01;
     puts("Tempo,E[N],E[W],Erro_Little,Ocupacao");
@@ -193,7 +193,7 @@ int main()
     double e_w_final = (e_w_chegada.soma_areas - e_w_saida.soma_areas) / e_w_chegada.no_eventos;
 
     double lambda = e_w_chegada.no_eventos / tempo_decorrido;
-/*
+
     printf("\nE[N]: %lf\n", e_n_final); // lF
     printf("E[W]: %lf\n", e_w_final);   // lF
     // printf("lambda: %lf\n\n", lambda);  // lF
@@ -201,11 +201,10 @@ int main()
     printf("Erro de Little: %.20lf\n", e_n_final - lambda * e_w_final); // lF
 
     printf("Ocupacao: %lf\n", (soma_tempo_servico / maximo(tempo_decorrido, servico))); // lF
-    // printf("Max fila: %ld\n", maxFila);
-    // printf("Aux m em %d.\n", aux);
-    double totalpact = 100 * maximo(tempo_decorrido,servico);
-    //printf("totalpac:%f\n", totalpact);
+    // printf("Max fila: %ld\n", maxFila);*/
+    double totalpact = cont1500 + cont550 + cont40;
+    printf("totalpac:%f\n", totalpact);
     printf("\n550:%f,  40:%f 1500:%f\n", cont550/totalpact,cont40/totalpact,cont1500/totalpact);
-    */
+    
     return 0;
 }

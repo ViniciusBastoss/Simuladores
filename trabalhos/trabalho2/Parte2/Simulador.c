@@ -94,6 +94,7 @@ int main()
     double intervalo_medio_chegada;
     double inter_medio_chegada_chamada;
     double duracao_media_chamada;
+    double chegada_transmissao;
    // double tempo_medio_servico;
 
     unsigned long int fila = 0;
@@ -130,13 +131,16 @@ int main()
     while (tempo_decorrido <= tempo_simulacao)
     {
 
-        tempo_decorrido = !fila ? minimo(minimo(chegada, acadaT), chamada) : minimo(minimo(minimo(chegada, servico), acadaT), chamada);
+        tempo_decorrido = !fila ? minimo(minimo(minimo(chegada, acadaT), chamada),chegada_transmissao) : minimo(minimo(minimo(minimo(chegada, servico), acadaT), chamada),chegada_transmissao);
 
-        if (tempo_decorrido == chegada)
+        if (tempo_decorrido == chegada || tempo_decorrido == chegada_transmissao)
         {
             if (!fila)
             {
-                pacote = gerapacote();
+                if(tempo_decorrido == chegada)
+                    pacote = gerapacote(); 
+                else
+                    pacote = 1280;
                 servico = tempo_decorrido + pacote/link_capacidade;
                 soma_tempo_servico += servico - tempo_decorrido;
             }
