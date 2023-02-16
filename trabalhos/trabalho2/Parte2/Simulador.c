@@ -43,7 +43,7 @@ void inicia_little(little *l)
     l->tempo_anterior = 0.0;
     l->soma_areas = 0.0;
 }
-int cont550 = 0,cont40 = 0, cont1500 = 0;
+int cont550 = 0, cont40 = 0, cont1500 = 0;
 double acadaT;
 
 void coletaDados(little e_n, little e_w_chegada, little e_w_saida, double soma_tempo_servico)
@@ -54,29 +54,32 @@ void coletaDados(little e_n, little e_w_chegada, little e_w_saida, double soma_t
                         (abs(e_w_chegada.no_eventos)));
     double lambda = e_w_chegada.no_eventos / acadaT;
 
-    printf("%lf,%lf,", acadaT, e_n_final);               // Tempo Atual   E[N]
+    printf("%lf,%lf,", acadaT, e_n_final);             // Tempo Atual   E[N]
     printf("%lf", e_w_final);                          // E[W]:
     printf(",%.15lf", e_n_final - lambda * e_w_final); // Erro de Little:
-    printf(",%lf\n", soma_tempo_servico / acadaT);      // ocupação
+    printf(",%lf\n", soma_tempo_servico / acadaT);     // ocupação
 
     acadaT += 100;
 }
 
-double gerapacote(){
+double gerapacote()
+{
     double porcentagem = rand() % 100;
-    if(porcentagem < 50){
+    if (porcentagem < 50)
+    {
         cont550++;
         return 550;
     }
-    if(porcentagem < 90){
+    if (porcentagem < 90)
+    {
         cont40++;
         return 40;
     }
-    if(porcentagem >=  90){
+    if (porcentagem >= 90)
+    {
         cont1500++;
         return 1500;
     }
-        
 }
 
 int main()
@@ -95,7 +98,7 @@ int main()
     double inter_medio_chegada_chamada;
     double duracao_media_chamada;
     double chegada_transmissao;
-   // double tempo_medio_servico;
+    // double tempo_medio_servico;
 
     unsigned long int fila = 0;
     unsigned long int maxFila = 0;
@@ -118,37 +121,44 @@ int main()
 
     // srand(time(NULL));
     srand(4400);
-    link_capacidade = 445.45*100; //60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
+    link_capacidade = 445.45 * 100; // 60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
     tempo_simulacao = 36000;
     intervalo_medio_chegada = 0.01;
     inter_medio_chegada_chamada = 5;
     duracao_media_chamada = 80;
+    chegada_transmissao = tempo_simulacao * 2;
     puts("Tempo,E[N],E[W],Erro_Little,Ocupacao");
     // gerando o tempo de chegada da primeira requisicao
     chegada = (-1.0 / (1.0 / intervalo_medio_chegada)) * log(aleatorio());
     chamada = (-1.0 / (1.0 / inter_medio_chegada_chamada)) * log(aleatorio());
 
+                duracao_chamada = tempo_decorrido + (-1.0 / (1.0 / duracao_media_chamada)) * log(aleatorio());
+            lista_chamadas = inserirFinal(lista_chamadas, chamada, duracao_chamada);
+            printf("\n%lf  %lf", chamada, tempo_decorrido);
+            chamada = tempo_decorrido + (-1.0 / (1.0 / inter_medio_chegada_chamada)) * log(aleatorio());
+mostrarLista(lista_chamadas);
+  printf("\n%lf  %lf", chamada, tempo_decorrido);
+  //puts("");
+    chegada_transmissao = trata_pacote_transmissao(lista_chamadas, tempo_decorrido);
+
     while (tempo_decorrido <= tempo_simulacao)
     {
 
-        tempo_decorrido = !fila ? minimo(minimo(minimo(chegada, acadaT), chamada),chegada_transmissao) : minimo(minimo(minimo(minimo(chegada, servico), acadaT), chamada),chegada_transmissao);
+        tempo_decorrido = !fila ? minimo(minimo(minimo(chegada, acadaT), chamada), chegada_transmissao) : minimo(minimo(minimo(minimo(chegada, servico), acadaT), chamada), chegada_transmissao);
 
-        if (tempo_decorrido == chegada || tempo_decorrido == chegada_transmissao)
+        if (tempo_decorrido == chegada)
         {
             if (!fila)
             {
-                if(tempo_decorrido == chegada)
-                    pacote = gerapacote(); 
-                else
-                    pacote = 1280;
-                servico = tempo_decorrido + pacote/link_capacidade;
+                pacote = gerapacote();
+                servico = tempo_decorrido + pacote / link_capacidade;
                 soma_tempo_servico += servico - tempo_decorrido;
             }
             fila++;
             maxFila = maximo(maxFila, fila);
             chegada = tempo_decorrido + (-1.0 / (1.0 / intervalo_medio_chegada)) * log(aleatorio());
-            //printf("\nChegada:%lf",chegada);
-            // little
+            // printf("\nChegada:%lf",chegada);
+            //  little
             e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
             e_n.tempo_anterior = tempo_decorrido;
             e_n.no_eventos++;
@@ -158,32 +168,28 @@ int main()
             e_w_chegada.tempo_anterior = tempo_decorrido;
             e_w_chegada.no_eventos++;
         }
-        else 
-            if (tempo_decorrido == servico)
+        else if (tempo_decorrido == servico)
+        {
+            fila--;
+
+            if (fila)
             {
-                fila--;
-
-                if (fila)
-                {
-                    pacote = gerapacote();
-                    servico = tempo_decorrido + pacote/link_capacidade;
-                    soma_tempo_servico += servico - tempo_decorrido;
-                }
-                // little
-                e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
-                e_n.tempo_anterior = tempo_decorrido;
-                e_n.no_eventos--;
-
-
-                e_w_saida.soma_areas +=
-                    (tempo_decorrido - e_w_saida.tempo_anterior) * e_w_saida.no_eventos;
-                e_w_saida.tempo_anterior = tempo_decorrido;
-                e_w_saida.no_eventos++;
-
-
+                pacote = gerapacote();
+                servico = tempo_decorrido + pacote / link_capacidade;
+                soma_tempo_servico += servico - tempo_decorrido;
             }
-            else if (tempo_decorrido == acadaT)
-            {
+            // little
+            e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
+            e_n.tempo_anterior = tempo_decorrido;
+            e_n.no_eventos--;
+
+            e_w_saida.soma_areas +=
+                (tempo_decorrido - e_w_saida.tempo_anterior) * e_w_saida.no_eventos;
+            e_w_saida.tempo_anterior = tempo_decorrido;
+            e_w_saida.no_eventos++;
+        }
+        else if (tempo_decorrido == acadaT)
+        {
             e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
             e_w_chegada.soma_areas += (tempo_decorrido - e_w_chegada.tempo_anterior) * e_w_chegada.no_eventos;
             e_w_saida.soma_areas += (tempo_decorrido - e_w_saida.tempo_anterior) * e_w_saida.no_eventos;
@@ -191,15 +197,37 @@ int main()
             e_w_saida.tempo_anterior = tempo_decorrido;
             e_n.tempo_anterior = tempo_decorrido;
             e_w_chegada.tempo_anterior = tempo_decorrido;
-            coletaDados(e_n,e_w_chegada,e_w_saida,soma_tempo_servico);
+            coletaDados(e_n, e_w_chegada, e_w_saida, soma_tempo_servico);
+        }
+        else if (tempo_decorrido == chamada)
+        {
+            duracao_chamada = tempo_decorrido + (-1.0 / (1.0 / duracao_media_chamada)) * log(aleatorio());
+            lista_chamadas = inserirFinal(lista_chamadas, chamada, duracao_chamada);
+            chamada = tempo_decorrido + (-1.0 / (1.0 / inter_medio_chegada_chamada)) * log(aleatorio());
+        }
+        else if (tempo_decorrido == chegada_transmissao)
+        {
+            if (!fila)
+            {
+                pacote = 1280;
+                servico = tempo_decorrido + pacote / link_capacidade;
+                soma_tempo_servico += servico - tempo_decorrido;
             }
-            else if (tempo_decorrido == chamada){
-                duracao_chamada  = tempo_decorrido + (-1.0 / (1.0 / duracao_media_chamada)) * log(aleatorio());
-                lista_chamadas = inserirFinal(lista_chamadas,chamada, duracao_chamada);
-                chamada = tempo_decorrido + (-1.0 / (1.0 / inter_medio_chegada_chamada)) * log(aleatorio());
-            }
+            fila++;
+            maxFila = maximo(maxFila, fila);
+            // printf("\nChegada:%lf",chegada);
+            //  little
+            e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
+            e_n.tempo_anterior = tempo_decorrido;
+            e_n.no_eventos++;
 
+            e_w_chegada.soma_areas +=
+                (tempo_decorrido - e_w_chegada.tempo_anterior) * e_w_chegada.no_eventos;
+            e_w_chegada.tempo_anterior = tempo_decorrido;
+            e_w_chegada.no_eventos++;
 
+            chegada_transmissao = trata_pacote_transmissao(lista_chamadas, tempo_decorrido);
+        }
     }
     e_w_chegada.soma_areas +=
         (tempo_decorrido - e_w_chegada.tempo_anterior) * e_w_chegada.no_eventos;
@@ -214,22 +242,23 @@ int main()
     double e_w_final = (e_w_chegada.soma_areas - e_w_saida.soma_areas) / e_w_chegada.no_eventos;
 
     double lambda = e_w_chegada.no_eventos / tempo_decorrido;
-/*
-    printf("\nE[N]: %lf\n", e_n_final); // lF
-    printf("E[W]: %lf\n", e_w_final);   // lF
-    // printf("lambda: %lf\n\n", lambda);  // lF
+    /*
+        printf("\nE[N]: %lf\n", e_n_final); // lF
+        printf("E[W]: %lf\n", e_w_final);   // lF
+        // printf("lambda: %lf\n\n", lambda);  // lF
 
-    printf("Erro de Little: %.20lf\n", e_n_final - lambda * e_w_final); // lF
+        printf("Erro de Little: %.20lf\n", e_n_final - lambda * e_w_final); // lF
 
-    printf("Ocupacao: %lf\n", (soma_tempo_servico / maximo(tempo_decorrido, servico))); // lF
-    // printf("Max fila: %ld\n", maxFila);
-    // printf("Aux m em %d.\n", aux);
-    double totalpact = 100 * maximo(tempo_decorrido,servico);
-    //printf("totalpac:%f\n", totalpact);
-    printf("\n550:%f,  40:%f 1500:%f\n", cont550/totalpact,cont40/totalpact,cont1500/totalpact);
-    */
-   printf("\nElementos na lista:%d", qtdElementos(lista_chamadas));
-   mostrarLista(lista_chamadas);
-  // printf("\nElementos na lista:%lf", lista_chamadas->inicio);
+        printf("Ocupacao: %lf\n", (soma_tempo_servico / maximo(tempo_decorrido, servico))); // lF
+        // printf("Max fila: %ld\n", maxFila);
+        // printf("Aux m em %d.\n", aux);
+        double totalpact = 100 * maximo(tempo_decorrido,servico);
+        //printf("totalpac:%f\n", totalpact);
+        printf("\n550:%f,  40:%f 1500:%f\n", cont550/totalpact,cont40/totalpact,cont1500/totalpact);
+        */
+       
+    printf("\nElementos na lista:%d", qtdElementos(lista_chamadas));
+    mostrarLista(lista_chamadas);
+    // printf("\nElementos na lista:%lf", lista_chamadas->inicio);
     return 0;
 }

@@ -1,10 +1,11 @@
 #include "prototipos.h"
 
-struct no{
+typedef struct no{
 	double inicio;
 	double fim;
+	double prox_pacote;
 	NO *proximo;
-};
+}NO;
 
 NO *inserirInicio(NO *lista, double v, double f){	
 	//printf("\nValor inserido:%lf",v);		//FEITA
@@ -12,6 +13,7 @@ NO *inserirInicio(NO *lista, double v, double f){
 	novo = (NO*) malloc(sizeof(NO));
 	novo->inicio = v;
 	novo->fim = f;
+	novo->prox_pacote = v;
 	novo->proximo = lista;
 	return novo;
 }
@@ -21,10 +23,11 @@ NO *inserirFinal(NO *lista, double v, double f){				//FEITA
 	aux2 = lista;
 	novo = (NO*) malloc(sizeof(NO));
 	novo->inicio = v;
-	novo->inicio = f;
+	novo->fim = f;
+	novo->prox_pacote = v;
 
 	if( lista == NULL){
-		novo->proximo = lista;
+		novo->proximo = NULL;
 		return novo;
 	}else{
 		NO *aux;	
@@ -41,6 +44,7 @@ NO *inserirOrdenado(NO *lista, double v, double f){			//FEITA
 	novo = (NO*) malloc(sizeof(NO));
 	novo->inicio = v;
 	novo->fim = f;
+	novo->prox_pacote = v;
 	if( lista == NULL){
 		novo->proximo  = lista;
 		return novo;
@@ -85,7 +89,7 @@ void mostrarLista(NO *lista){					//FEITA
 	}else{
 		printf("LISTA: ");
 		for(NO *aux=lista; aux != NULL; aux= aux->proximo){
-			printf("%lf ",aux->inicio);
+			printf("\n%lf %lf",aux->inicio,aux->fim);
 		}
 		printf("\n");
 	}
@@ -96,11 +100,11 @@ void mostrarInverso(NO *lista){					//FEITA
 		printf("Lista Vazia.\n");
 	}else{
 		if(lista->proximo == NULL){
-			printf("%d ", lista->inicio);
+			printf("%lf ", lista->inicio);
 			return ;
 		}
 		mostrarInverso(lista->proximo);
-		printf("%d ", lista->inicio);
+		printf("%lf ", lista->inicio);
 	}
 }
 
@@ -130,14 +134,14 @@ int qtdElementos(NO *lista){					//FEITA
 
 NO* removerElemento(NO *lista, double valor){		//FEITA
 	if( lista == NULL){
-		printf("Lista Vazia.\n");
+		//printf("Lista Vazia.\n");
 		return lista;
 	}else{
 
 		NO *aux;
 		//INICIO
 		if(lista->inicio == valor){	
-			printf("Valor %d encontrado.\n", valor);
+			printf("Valor %lf encontrado.\n", lista->fim);
 			return lista->proximo;
 		}
 		for(aux=lista; aux->proximo != NULL; aux= aux->proximo){
@@ -145,11 +149,11 @@ NO* removerElemento(NO *lista, double valor){		//FEITA
 				NO *local;
 				local = (aux->proximo)->proximo;
 				aux->proximo = local;
-				printf("Valor %d encontrado.\n", valor);
+				//printf("Valor %lf encontrado.\n", aux->fim);
 				return lista;
 			}
 		}
-		printf("Valor %d não encontrado.\n", valor);
+		printf("Valor %lf não encontrado.\n", valor);
 		return lista;
 	}
 }
@@ -158,6 +162,47 @@ void liberar(NO *lista){						//FEITA
 	if( lista->proximo != NULL){
 		liberar(lista->proximo);
 	}
-	printf("Limpando elemento: %d\n", lista->inicio);
+	printf("Limpando elemento: %lf\n", lista->inicio);
 	free(lista);
+}
+
+
+double trata_pacote_transmissao(NO *lista_chamadas, double tempo_decorrido){
+   NO *aux, *transmissao_atual;
+   double menor_tempo = 50000000000;
+   //printf("eieie");
+   if(lista_chamadas == NULL){
+	return 10000000.0;
+   }
+	  if(lista_chamadas->proximo == NULL){
+		menor_tempo = lista_chamadas->prox_pacote;
+		transmissao_atual = lista_chamadas;
+		//printf("\n Inicio:%lf    fim:%lf   proxpacote:%lf", lista_chamadas->inicio, lista_chamadas->fim, lista_chamadas->prox_pacote);
+	  }
+	for(aux = lista_chamadas; aux->proximo != NULL; aux = aux->proximo){
+		if(aux->fim < tempo_decorrido){
+			//printf("\nTempo_Atual: %lf", tempo_decorrido);
+			printf("\nRemovido: Inicio:%lf    fim:%lf   proxpacote:%lf", aux->inicio, aux->fim, aux->prox_pacote);
+			lista_chamadas = removerElemento(lista_chamadas, aux->inicio);
+		}
+		else
+		   if(aux->prox_pacote < menor_tempo){
+            menor_tempo = aux->prox_pacote;
+			transmissao_atual = aux;
+		}
+	}
+	transmissao_atual->prox_pacote += 0.02;
+			//printf("\n Inicio:%lf    fim:%lf   proxpacote:%lf", lista_chamadas->inicio, lista_chamadas->fim, lista_chamadas->prox_pacote);
+		//exit(10);
+	//printf("kkkk");
+	//printf("\nTempo_decorrido: %lf", tempo_decorrido);
+	return menor_tempo;
+
+	
+    
+	//for(aux = lista_chamadas; aux->proximo != NULL; aux = aux->proximo){
+	
+
+
+
 }

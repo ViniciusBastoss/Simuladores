@@ -24,3 +24,5 @@ int qtdElementos(NO *lista);
 NO* removerElemento(NO *lista, double valor);
 
 void liberar(NO *lista);
+
+double trata_pacote_transmissao(NO *lista_chamadas, double tempo_decorrido);
