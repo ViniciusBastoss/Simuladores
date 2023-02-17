@@ -138,8 +138,8 @@ int main()
     link_capacidade = 4512.5 * 164; // 60% = 735 80% = 551,25   95% = 464,21 99% = 445,45
     tempo_simulacao = 36000;
     intervalo_medio_chegada = 0.01;
-    inter_medio_chegada_chamada = 5;
-    duracao_media_chamada = 70;
+    inter_medio_chegada_chamada = 30;
+    duracao_media_chamada = 150;
     chegada_transmissao = tempo_simulacao * 2;
     puts("Tempo,E[N],E[W],Erro_Little,Ocupacao");
     // gerando o tempo de chegada da primeira requisicao
@@ -149,6 +149,7 @@ int main()
     duracao_chamada = tempo_decorrido + (-1.0 / (1.0 / duracao_media_chamada)) * log(aleatorio());
     lista_chamadas = inserirFinal(lista_chamadas, chamada, duracao_chamada);
     chamada = tempo_decorrido + (-1.0 / (1.0 / inter_medio_chegada_chamada)) * log(aleatorio());
+   // printf("\nchamada: %lf",chamada);
 
 
     lista_chamadas = trata_pacote_transmissao(lista_chamadas, tempo_decorrido,&chegada_transmissao);
@@ -216,6 +217,7 @@ int main()
             duracao_chamada = tempo_decorrido + (-1.0 / (1.0 / duracao_media_chamada)) * log(aleatorio());
             lista_chamadas = inserirFinal(lista_chamadas, chamada, duracao_chamada);
             chamada = tempo_decorrido + (-1.0 / (1.0 / inter_medio_chegada_chamada)) * log(aleatorio());
+            //printf("\nchamada: %lf",chamada);
         }
         else if (tempo_decorrido == chegada_transmissao)
         {
