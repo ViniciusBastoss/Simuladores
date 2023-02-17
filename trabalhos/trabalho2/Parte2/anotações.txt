@@ -7,3 +7,75 @@
     inter_medio_chegada_chamada = 16;
     duracao_media_chamada = 80;
     chegada_transmissao = tempo_simulacao * 2;
+
+
+C = chamadas ativas
+
+
+soma tempo chamadas / tempo execução
+
+tamanho_pacote * numero de pacotes/segundo.
+------------------------------------
+
+questao: numero de pacotes.
+
+QPs = quantidade de pacotes por segundo de uma chamada
+C * QPs = numero de pacotes
+-----------------------------
+
+1000 / 20 = 50 pacotes/segundo
+64000 / 50 = 1280 bytes/ pacote
+QPs = 50
+----------------------------------
+chamadas ativas em media 
+
+
+
+80 = tempo de cada chamada
+36000/ 5 = 7200 chamadas
+80 / 36000 = 0,0022222222222222222
+7200 * (80 / 36000)  = 16
+
+16*50*160 = 128000 depois  128000 * 0,8 ...
+--------------------------
+nova tentativa:
+
+chamadas ativas em media 
+
+
+
+80 = tempo de cada chamada
+36000/ 5 = 7200 chamadas
+7200 / 80 = 90
+90 * 50 * 1280 = 5760000
+
+----------------------------------
+
+numero medio chamadas = totasl_chamadas/tempo
+80 / 5 = 16
+36000 / 80 = 2250
+
+
+
+
+
+pacotes gerados: 18.000.000     
+18.458.874
+
+chamadas = 3600
+duração de cada chamada = 100
+pacotes por segundo = 50
+
+------------------------final para chamadas -------------------
+80 = tempo de cada chamada
+36000/ 5 = 7200 chamadas
+80 / 36000 = 0,0022222222222222222
+7200 * (80 / 36000)  = 16
+
+16*50*160 = 128000 depois  128000 * 0,8 ...
+
+
+-------------------------chamadas + web ------------------------
+16 * 50 * 160 = 128000 + web = 128000 + 441 * 100 = 172100
+
+{0,6 ; 0,8 ; 0,95 ; 0,99} = {286833.333;   215125;   181157.9;  173838.383  }
