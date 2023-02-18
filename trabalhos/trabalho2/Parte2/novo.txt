@@ -105,8 +105,6 @@ int main()
     double servico_chamada;
     double soma_tempo_servico = 0.0;
 
-    double totalpact = 0;
-
     double tempo_simulacao;
 
     double tempo_decorrido = 0.0;
@@ -139,10 +137,10 @@ int main()
     // srand(time(NULL));
     
     srand(4400);                   //  web + chamadas : 60% = 286833.333; 80% = 215125; 95% =  181157.9; 99% = 173838
-    link_capacidade = 129293; // somente chamadas : 60% = 213333.333 80% = 160000   95% = 134736.842 99% = 129293
+    link_capacidade = 286833.333; // somente chamadas : 60% = 213333.333 80% = 160000   95% = 134736.842 99% = 129293
     tempo_simulacao = 36000;
     servico = tempo_simulacao;  //necessario para obeter apenas dados de tráfego em tempo real
-    intervalo_medio_chegada = 0.001;  //Para obter dados apenas para o tráfego em tempo real basta  colocar intervalo_medio_chegada > tempo execução
+    intervalo_medio_chegada = 0.01;  //Para obter dados apenas para o tráfego em tempo real basta  colocar intervalo_medio_chegada > tempo execução
     inter_medio_chegada_chamada = 5;    // <= 30
     duracao_media_chamada = 80;  // >= 60
     chegada_transmissao = tempo_simulacao * 2;
@@ -162,7 +160,7 @@ int main()
     while (tempo_decorrido <= tempo_simulacao)
     {                              
                                                                                            
-        tempo_decorrido = !fila ? minimo4(chegada,acadaT, chamada, chegada_transmissao) : minimo(minimo( minimo4(chegada, acadaT, chamada, chegada_transmissao), servico), servico_chamada);
+        tempo_decorrido = !fila ? minimo4(tempo_simulacao,acadaT, chamada, chegada_transmissao) : minimo(minimo( minimo4(chegada, acadaT, chamada, chegada_transmissao), servico), servico_chamada);
 
         if (tempo_decorrido == chegada)
         {
@@ -171,7 +169,6 @@ int main()
                 pacote = gerapacote();
                 servico = tempo_decorrido + (pacote / link_capacidade);
                 soma_tempo_servico += servico - tempo_decorrido;
-                totalpact++;
             }
             fila++;
             maxFila = maximo(maxFila, fila);
@@ -195,7 +192,6 @@ int main()
                 pacote = gerapacote();
                 servico = tempo_decorrido + (pacote / link_capacidade);
                 soma_tempo_servico += servico - tempo_decorrido;
-                totalpact++;
             }
             // little
             e_n.soma_areas += (tempo_decorrido - e_n.tempo_anterior) * e_n.no_eventos;
@@ -231,7 +227,6 @@ int main()
                 pacote = 160;
                 servico_chamada = tempo_decorrido + (pacote / link_capacidade);
                 soma_tempo_servico += servico_chamada - tempo_decorrido;
-                totalpact++;
             }
             fila++;
             maxFila = maximo(maxFila, fila);
@@ -256,7 +251,6 @@ int main()
                 pacote = 160;
                 servico_chamada = tempo_decorrido + (pacote / link_capacidade);
                 soma_tempo_servico += servico_chamada - tempo_decorrido;
-                totalpact++;
 
             }
             // little
@@ -278,7 +272,7 @@ int main()
 
     e_w_saida.soma_areas +=
         (tempo_decorrido - e_w_saida.tempo_anterior) * e_w_saida.no_eventos;
-
+     //printf("\nAAA:%lf %lf  %lf  %f", e_n.soma_areas, tempo_decorrido, e_n.no_eventos, e_n.tempo_anterior);
     double e_n_final = e_n.soma_areas / tempo_decorrido;
     double e_w_final = (e_w_chegada.soma_areas - e_w_saida.soma_areas) / e_w_chegada.no_eventos;
 
@@ -292,9 +286,9 @@ int main()
         printf("Ocupacao: %lf\n", (soma_tempo_servico / maximo((tempo_decorrido, servico),servico_chamada))); // lF
         // printf("Max fila: %ld\n", maxFila);
         // printf("Aux m em %d.\n", aux);
-      
+       // double totalpact = 100 * maximo(tempo_decorrido,servico);
         //printf("totalpac:%f\n", totalpact);
-       printf("\n550:%f,  40:%f 1500:%f\n", cont550/totalpact,cont40/totalpact,cont1500/totalpact);
+      //  printf("\n550:%f,  40:%f 1500:%f\n", cont550/totalpact,cont40/totalpact,cont1500/totalpact);
         
        
    // printf("\nElementos na lista:%d", qtdElementos(lista_chamadas));
